@@ -19,6 +19,10 @@
 		1ADD19E5217574CE00DF7B1D /* DocumentSnapshot+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ADD19E4217574CE00DF7B1D /* DocumentSnapshot+Utils.swift */; };
 		1ADD19E82175781D00DF7B1D /* UIView+Constraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ADD19E72175781D00DF7B1D /* UIView+Constraints.swift */; };
 		1ADD19EA2175801600DF7B1D /* DynamicViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ADD19E92175801600DF7B1D /* DynamicViewModel.swift */; };
+		1ADD19EC21784E3400DF7B1D /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ADD19EB21784E3400DF7B1D /* Views.swift */; };
+		1ADD19EE21784E6A00DF7B1D /* StatusButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ADD19ED21784E6A00DF7B1D /* StatusButton.swift */; };
+		1ADD19F0217852A500DF7B1D /* StackView+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ADD19EF217852A500DF7B1D /* StackView+Utils.swift */; };
+		1ADD19F22178593000DF7B1D /* String+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ADD19F12178593000DF7B1D /* String+Utils.swift */; };
 		9317F15CC2164932DD292529 /* Pods_FirestoreLoginViewTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FED9E18DFD38B75CA53D3231 /* Pods_FirestoreLoginViewTests.framework */; };
 		C07B4E703948134F2F8214A1 /* Pods_FirestoreLoginView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6620E49456C6DABE9C4901BD /* Pods_FirestoreLoginView.framework */; };
 		FCD1F42DD8F10EED3CFE47D6 /* Pods_FirestoreLoginViewUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDFFE1314E1C40D4806C83B /* Pods_FirestoreLoginViewUITests.framework */; };
@@ -60,6 +64,10 @@
 		1ADD19E4217574CE00DF7B1D /* DocumentSnapshot+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocumentSnapshot+Utils.swift"; sourceTree = "<group>"; };
 		1ADD19E72175781D00DF7B1D /* UIView+Constraints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Constraints.swift"; sourceTree = "<group>"; };
 		1ADD19E92175801600DF7B1D /* DynamicViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicViewModel.swift; sourceTree = "<group>"; };
+		1ADD19EB21784E3400DF7B1D /* Views.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
+		1ADD19ED21784E6A00DF7B1D /* StatusButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusButton.swift; sourceTree = "<group>"; };
+		1ADD19EF217852A500DF7B1D /* StackView+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StackView+Utils.swift"; sourceTree = "<group>"; };
+		1ADD19F12178593000DF7B1D /* String+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Utils.swift"; sourceTree = "<group>"; };
 		1EDFFE1314E1C40D4806C83B /* Pods_FirestoreLoginViewUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FirestoreLoginViewUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CE2774C9B814C57D6CD0356 /* Pods-FirestoreLoginView.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FirestoreLoginView.release.xcconfig"; path = "Pods/Target Support Files/Pods-FirestoreLoginView/Pods-FirestoreLoginView.release.xcconfig"; sourceTree = "<group>"; };
 		31FAF1AFF0B1C8D2FCCDBA58 /* Pods-FirestoreLoginViewTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FirestoreLoginViewTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FirestoreLoginViewTests/Pods-FirestoreLoginViewTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -162,6 +170,8 @@
 				1ADD19E22175749300DF7B1D /* Observable+Rx.swift */,
 				1ADD19E4217574CE00DF7B1D /* DocumentSnapshot+Utils.swift */,
 				1ADD19E72175781D00DF7B1D /* UIView+Constraints.swift */,
+				1ADD19EF217852A500DF7B1D /* StackView+Utils.swift */,
+				1ADD19F12178593000DF7B1D /* String+Utils.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -169,6 +179,8 @@
 		1ADD19E6217574F200DF7B1D /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				1ADD19EB21784E3400DF7B1D /* Views.swift */,
+				1ADD19ED21784E6A00DF7B1D /* StatusButton.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -431,11 +443,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1ADD19F22178593000DF7B1D /* String+Utils.swift in Sources */,
 				1ADD19E5217574CE00DF7B1D /* DocumentSnapshot+Utils.swift in Sources */,
 				1ADD19E32175749300DF7B1D /* Observable+Rx.swift in Sources */,
 				1ADD19EA2175801600DF7B1D /* DynamicViewModel.swift in Sources */,
+				1ADD19EC21784E3400DF7B1D /* Views.swift in Sources */,
 				1ADD19E82175781D00DF7B1D /* UIView+Constraints.swift in Sources */,
+				1ADD19EE21784E6A00DF7B1D /* StatusButton.swift in Sources */,
 				1ADD19E0217573E300DF7B1D /* DynamicViewController.swift in Sources */,
+				1ADD19F0217852A500DF7B1D /* StackView+Utils.swift in Sources */,
 				1ADD19B02175670400DF7B1D /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

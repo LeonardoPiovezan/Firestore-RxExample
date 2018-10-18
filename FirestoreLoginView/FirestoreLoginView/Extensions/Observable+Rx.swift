@@ -15,3 +15,10 @@ extension Observable where Element: DocumentSnapshot {
         return self.map({ $0.decodeObject(options: options) })
     }
 }
+
+protocol DecodableOptions {
+    var values: [String: Any] { get set }
+    var currentKey: CodingUserInfoKey { get }
+    static var key: CodingUserInfoKey { get }
+}
+

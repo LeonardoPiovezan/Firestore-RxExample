@@ -14,19 +14,17 @@ import RxFirebase
 
 class DynamicViewModel {
 
-    let subviews: Driver<[UIView]?>
+    var subviews: Driver<[UIView]?>!
+    var loginSuccess = PublishSubject<Void>()
     private var firestore: Firestore!
-    init() {
+    private var disposeBag = DisposeBag()
+    private var emailTextField: UITextField!
+    private var passwordTextField: UITextField!
+    private var loginbutton: StatusButton!
 
-        if let filePath =  Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist"),
-            let config = FirebaseOptions(contentsOfFile: filePath) {
-            FirebaseApp.configure(options: config)
-        }
+    init(firestore: Firestore) {
 
-        self.firestore = Firestore.firestore()
-        let settings = firestore.settings
-        settings.areTimestampsInSnapshotsEnabled = true
-        firestore.settings = settings
+        self.firestore = firestore
 
         self.subviews = firestore
             .collection("configuration")
@@ -35,27 +33,92 @@ class DynamicViewModel {
             .listen()
             .map(Views.self)
             .map { views in
-
-               return views?.sequence.map { element -> UIView in
-
-                if element["label"] != nil {
-                    let label = UILabel()
-
-                    label.frame.size = CGSize(width: 300,  height: 30)
-                    label.text = element["label"]
-                    return label
-                } else if element["textfield"] != nil {
-                    let textField = UITextField()
-                    textField.frame.size = CGSize(width: 300, height: 30)
-                    textField.placeholder = element["textfield"]
-                    return textField
+                return views?.sequence.map { element -> UIView in
+                    self.disposeBag = DisposeBag()
+                    return self.getViewFor(element: element)
                 }
-                   return UIView()
-                }
-        }.asDriver(onErrorJustReturn: nil)
+            }.asDriver(onErrorJustReturn: nil)
     }
-}
 
-struct Views: Codable {
-    let sequence: [[String:String]]
+
+    private func getViewFor(element: [String:String]) -> UIView {
+        if element["label"] != nil {
+            let label = UILabel()
+
+            label.frame.size = CGSize(width: 300,  height: 30)
+            label.text = element["label"]
+            return label
+        } else if element["textField"] != nil {
+            let textField = UITextField()
+            textField.frame.size = CGSize(width: 300, height: 30)
+            textField.placeholder = element["textField"]
+
+            if element["type"] == "email" {
+                self.setupEmailField(textField)
+            } else if element["type"] == "password" {
+                self.setupPasswordTextField(textField)
+            }
+            return textField
+        } else if element["button"] != nil {
+            let button = StatusButton()
+            button.frame.size = CGSize(width: 250, height: 50)
+            button.backgroundColor = .red
+            button.setTitle(element["button"]!, for: .normal)
+
+            self.setupLoginButton(button)
+            return button
+        }
+        return UIView()
+    }
+    func setupEmailField(_ textField: UITextField) {
+        self.emailTextField = textField
+    }
+
+    func setupPasswordTextField(_ textField: UITextField) {
+        self.passwordTextField = textField
+    }
+
+    func setupLoginButton(_ button: StatusButton) {
+        self.loginbutton = button
+        self.setUpBinding()
+    }
+
+    func setUpBinding() {
+
+        guard let _ = self.emailTextField,
+            let _ = self.passwordTextField,
+            let _ = self.loginbutton else {
+            return
+        }
+        let isEmailValid = self.emailTextField.rx.text.map { text -> Bool in
+            guard let email = text else {
+                return false
+            }
+            return email.isValidEmail
+        }
+
+        let isPasswordValid =  self.passwordTextField.rx.text.map { text -> Bool in
+            guard let password = text else {
+                return false
+            }
+            return password.count > 5
+        }
+        let isButtonEnabled = Observable.combineLatest(isEmailValid, isPasswordValid) { isEmailValid, isPasswordValid in
+            return isEmailValid && isPasswordValid
+        }
+
+
+        isButtonEnabled
+            .bind(to: self.loginbutton.rx.isEnabled)
+            .disposed(by: self.disposeBag)
+        
+        let buttonTap = self.loginbutton.rx.tap.asObservable()
+
+        buttonTap
+            .delay(5, scheduler: MainScheduler.instance)
+            .subscribe(onNext: { _ in
+                self.loginSuccess.onNext(())
+            }).disposed(by: self.disposeBag)
+
+    }
 }

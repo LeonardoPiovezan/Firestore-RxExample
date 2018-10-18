@@ -19,43 +19,55 @@ class DynamicViewController: UIViewController {
     var viewModel: DynamicViewModel!
     let disposeBag = DisposeBag()
 
+    var loadingAlert: UIAlertController!
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.configureFirestore()
         self.configureViewModel()
-
-        self.viewModel.subviews.drive(onNext: { [weak self] views in
-            guard let `views` = views, let `self` = self else {
-                return
-            }
-            self.stackView.removeAllArrangedSubviews()
-
-            views.forEach{self.stackView.addArrangedSubview($0)}
-
-        }).disposed(by: disposeBag)
+        self.setupBindings()
     }
 
-    func configureViewModel() {
-        self.viewModel = DynamicViewModel()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
     }
-}
 
-protocol DecodableOptions {
-    var values: [String: Any] { get set }
-    var currentKey: CodingUserInfoKey { get }
-    static var key: CodingUserInfoKey { get }
-}
-
-extension UIStackView {
-
-    func removeAllArrangedSubviews() {
-
-        let removedSubviews = arrangedSubviews.reduce([]) { (allSubviews, subview) -> [UIView] in
-            self.removeArrangedSubview(subview)
-            return allSubviews + [subview]
+    func configureFirestore() {
+        if let filePath =  Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist"),
+            let config = FirebaseOptions(contentsOfFile: filePath) {
+            FirebaseApp.configure(options: config)
         }
 
-        // Remove the views from self
-        removedSubviews.forEach({ $0.removeFromSuperview() })
+        self.firestore = Firestore.firestore()
+        let settings = firestore.settings
+        settings.areTimestampsInSnapshotsEnabled = true
+        firestore.settings = settings
     }
+    func configureViewModel() {
+        self.viewModel = DynamicViewModel(firestore: self.firestore)
+    }
+
+    func setupBindings() {
+        self.viewModel
+            .subviews
+            .drive(onNext: { [weak self] views in
+                guard let `views` = views, let `self` = self else {
+                    return
+                }
+                self.stackView.removeAllArrangedSubviews()
+
+                views.forEach{self.stackView.addArrangedSubview($0)}
+
+            }).disposed(by: disposeBag)
+
+        self.viewModel
+            .loginSuccess
+            .subscribe(onNext: { [weak self] _ in
+                self?.performSegue(withIdentifier: "login", sender: nil)
+            }).disposed(by: disposeBag)
+
+    }
+
 }
+
